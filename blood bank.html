@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Blood Bank Management System</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f4f6f9;
+    }
+    header {
+      background: crimson;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-size: 22px;
+    }
+    .container {
+      padding: 20px;
+    }
+    button {
+      padding: 8px 15px;
+      margin: 5px 0;
+      border: none;
+      background: crimson;
+      color: white;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    button:hover {
+      opacity: 0.9;
+    }
+    input, select {
+      padding: 8px;
+      margin: 5px 0;
+      width: 100%;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+    th, td {
+      padding: 10px;
+      text-align: center;
+    }
+    .nav button {
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>Blood Bank Management System</header>
+  <div id="root"></div>
+
+<script type="text/babel">
+
+const { useState, useEffect } = React;
+
+function App() {
+  const [page, setPage] = useState("dashboard");
+
+  return (
+    <div className="container">
+      <div className="nav">
+        <button onClick={() => setPage("dashboard")}>Dashboard</button>
+        <button onClick={() => setPage("addDonor")}>Add Donor</button>
+        <button onClick={() => setPage("viewDonor")}>View Donors</button>
+        <button onClick={() => setPage("addRequest")}>Add Request</button>
+        <button onClick={() => setPage("viewRequest")}>View Requests</button>
+      </div>
+
+      {page === "dashboard" && <Dashboard />}
+      {page === "addDonor" && <AddDonor />}
+      {page === "viewDonor" && <ViewDonor />}
+      {page === "addRequest" && <AddRequest />}
+      {page === "viewRequest" && <ViewRequest />}
+    </div>
+  );
+}
+
+function Dashboard() {
+  const donors = JSON.parse(localStorage.getItem("donors")) || [];
+  const requests = JSON.parse(localStorage.getItem("requests")) || [];
+
+  return (
+    <div>
+      <h2>Dashboard</h2>
+      <p>Total Donors: {donors.length}</p>
+      <p>Total Requests: {requests.length}</p>
+    </div>
+  );
+}
+
+function AddDonor() {
+  const [form, setForm] = useState({
+    name: "",
+    age: "",
+    bloodGroup: "",
+    phone: ""
+  });
+
+  const handleSubmit = () => {
+    const donors = JSON.parse(localStorage.getItem("donors")) || [];
+    donors.push(form);
+    localStorage.setItem("donors", JSON.stringify(donors));
+    alert("Donor Added Successfully!");
+    setForm({ name: "", age: "", bloodGroup: "", phone: "" });
+  };
+
+  return (
+    <div>
+      <h2>Add Donor</h2>
+      <input placeholder="Name"
+        value={form.name}
+        onChange={(e)=>setForm({...form,name:e.target.value})}/>
+      <input placeholder="Age"
+        value={form.age}
+        onChange={(e)=>setForm({...form,age:e.target.value})}/>
+      <select value={form.bloodGroup}
+        onChange={(e)=>setForm({...form,bloodGroup:e.target.value})}>
+        <option value="">Select Blood Group</option>
+        <option>A+</option><option>A-</option>
+        <option>B+</option><option>B-</option>
+        <option>O+</option><option>O-</option>
+        <option>AB+</option><option>AB-</option>
+      </select>
+      <input placeholder="Phone"
+        value={form.phone}
+        onChange={(e)=>setForm({...form,phone:e.target.value})}/>
+      <button onClick={handleSubmit}>Add Donor</button>
+    </div>
+  );
+}
+
+function ViewDonor() {
+  const [donors, setDonors] = useState([]);
+  const [search, setSearch] = useState("");
+
+  useEffect(()=>{
+    setDonors(JSON.parse(localStorage.getItem("donors")) || []);
+  },[]);
+
+  const deleteDonor = (index) => {
+    const updated = donors.filter((_,i)=>i!==index);
+    localStorage.setItem("donors", JSON.stringify(updated));
+    setDonors(updated);
+  };
+
+  const filtered = donors.filter(d =>
+    d.bloodGroup.toLowerCase().includes(search.toLowerCase())
+  );
+
+  return (
+    <div>
+      <h2>Donor List</h2>
+      <input placeholder="Search by Blood Group"
+        onChange={(e)=>setSearch(e.target.value)}/>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Blood Group</th>
+            <th>Phone</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filtered.map((d,i)=>(
+            <tr key={i}>
+              <td>{d.name}</td>
+              <td>{d.age}</td>
+              <td>{d.bloodGroup}</td>
+              <td>{d.phone}</td>
+              <td>
+                <button onClick={()=>deleteDonor(i)}>Delete</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function AddRequest() {
+  const [form, setForm] = useState({
+    patient: "",
+    bloodGroup: "",
+    units: ""
+  });
+
+  const handleSubmit = () => {
+    const requests = JSON.parse(localStorage.getItem("requests")) || [];
+    requests.push(form);
+    localStorage.setItem("requests", JSON.stringify(requests));
+    alert("Request Added Successfully!");
+    setForm({ patient:"", bloodGroup:"", units:"" });
+  };
+
+  return (
+    <div>
+      <h2>Add Blood Request</h2>
+      <input placeholder="Patient Name"
+        value={form.patient}
+        onChange={(e)=>setForm({...form,patient:e.target.value})}/>
+      <select value={form.bloodGroup}
+        onChange={(e)=>setForm({...form,bloodGroup:e.target.value})}>
+        <option value="">Select Blood Group</option>
+        <option>A+</option><option>A-</option>
+        <option>B+</option><option>B-</option>
+        <option>O+</option><option>O-</option>
+        <option>AB+</option><option>AB-</option>
+      </select>
+      <input placeholder="Units Required"
+        value={form.units}
+        onChange={(e)=>setForm({...form,units:e.target.value})}/>
+      <button onClick={handleSubmit}>Add Request</button>
+    </div>
+  );
+}
+
+function ViewRequest() {
+  const [requests, setRequests] = useState([]);
+
+  useEffect(()=>{
+    setRequests(JSON.parse(localStorage.getItem("requests")) || []);
+  },[]);
+
+  const deleteRequest = (index) => {
+    const updated = requests.filter((_,i)=>i!==index);
+    localStorage.setItem("requests", JSON.stringify(updated));
+    setRequests(updated);
+  };
+
+  return (
+    <div>
+      <h2>Blood Requests</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Patient</th>
+            <th>Blood Group</th>
+            <th>Units</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {requests.map((r,i)=>(
+            <tr key={i}>
+              <td>{r.patient}</td>
+              <td>{r.bloodGroup}</td>
+              <td>{r.units}</td>
+              <td>
+                <button onClick={()=>deleteRequest(i)}>Delete</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+
+</script>
+</body>
+</html>
