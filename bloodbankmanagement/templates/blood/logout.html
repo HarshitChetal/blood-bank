@@ -1,77 +1,64 @@
 {%load static%}
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
+<head>
     <meta charset="utf-8">
-    <title></title>
+    <title>Logged Out</title>
     <style>
-        .logo{
-      
-  display: table;
-  margin-right: auto;
-  margin-left: auto;
+        .logo {
+            display: table;
+            margin-right: auto;
+            margin-left: auto;
+        }
+        .logout-box {
+            background: #fff;
+            padding: 50px;
+            border-radius: 12px;
+            box-shadow: 0px 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 600px;
+            margin: auto;
+        }
+        .logout-title {
+            font-size: 32px;
+            color: #333;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+        .btn-login {
+            background-color: #FF0018;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 6px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 25px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .btn-login:hover {
+            background-color: #cc0014;
+            color: white;
         }
     </style>
-  </head>
-  <body>
+</head>
+<body>
     {% include "blood/navbar.html" %}
-    <br><br><br><br><br><br>
-<div class="container"> 
+    <br><br><br><br><br>
     
-    <!-- Middle Content Start -->
-    
-    <div class="vd_content-wrapper" style="min-height: 8px;">
-      <div class="vd_container" style="min-height: 8px;">
-        <div class="vd_content clearfix">
-          <div class="vd_content-section clearfix">
-            <div class="vd_register-page">
-              <div class="heading clearfix">
-                <div class="logo">
-                  <h2><img src="{% static "image/logout.png" %}" alt="logo"></h2>
-                </div>
-              </div>
-              <div class="panel widget">
-                <div class="panel-body">
-                  <div class="login-icon"> <i class="fa fa-sign-out"></i> </div>
-                  <h1 class="font-semibold text-center" style="font-size:52px">You Have Been Logged Out</h1>
-                  <form class="form-horizontal" action="#" role="form">
-                    <div class="form-group">
-                      <div class="col-md-12">
-                        <h4 class="text-center mgbt-xs-20">Thank you for using our website</h4>
-                       
-
-                      </div>
-                    </div>
-                   
-                  </form>
-                </div>
-              </div>
-              <!-- Panel Widget -->
-              
+    <div class="container"> 
+        <div class="logout-box">
+            <div class="logo">
+                <img src="{% static 'image/logout.png' %}" alt="logo" style="width: 140px;">
             </div>
-            <!-- vd_login-page --> 
+            <h2 class="logout-title">Logged Out Successfully</h2>
+            <p style="color: #777;">You have been securely signed out of your session.</p>
             
-          </div>
-          <!-- .vd_content-section --> 
-          
+            <a href="/adminlogin" class="btn-login">Login Again</a>
         </div>
-        <!-- .vd_content --> 
-      </div>
-      <!-- .vd_container --> 
     </div>
-    <!-- .vd_content-wrapper --> 
-    
-    <!-- Middle Content End --> 
-    
-  </div>
-<br><br><br>
-<br><br><br>
-{% include "blood/footer.html" %}
 
-  </body>
+    <br><br><br>
+    {% include "blood/footer.html" %}
+</body>
 </html>
-<!--
-developed By : sumit kumar
-facebook : fb.com/sumit.luv
-youtube : youtube.com/lazycoders
--->
